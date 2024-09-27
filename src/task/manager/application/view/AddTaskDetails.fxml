@@ -32,7 +32,7 @@
       <Label text="Start Date" GridPane.rowIndex="3" />
       <Label text="End Date" GridPane.rowIndex="4" />
       <Label layoutX="10.0" layoutY="17.0" text="Spend Hours" GridPane.rowIndex="5" />
-      <TextField fx:id="taskId" disable="true" editable="false" GridPane.columnIndex="1" />
+      <TextField fx:id="taskId" disable="true" editable="false" opacity="0.5" GridPane.columnIndex="1" />
       <TextField fx:id="taskName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       <TextField fx:id="spendHours" GridPane.columnIndex="1" GridPane.rowIndex="5" />
       <ChoiceBox fx:id="status" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
@@ -46,7 +46,7 @@
          </GridPane.margin>
       </ButtonBar>
       <DatePicker fx:id="startDate" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      <DatePicker fx:id="endDate" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      <DatePicker fx:id="endDate" disable="true" editable="false" opacity="0.5" GridPane.columnIndex="1" GridPane.rowIndex="4" />
    </children>
    <padding>
       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
