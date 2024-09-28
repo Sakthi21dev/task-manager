@@ -1,10 +1,12 @@
 package task.manager.application.service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import task.manager.application.constant.DateConstants;
 import task.manager.application.constant.TaskStatus;
 import task.manager.application.model.TaskDetails;
 
@@ -50,5 +52,11 @@ public class TaskRepository {
 
 	public static String getNewId() {
 		return String.valueOf(id.getAndIncrement());
+	}
+	
+	public static boolean predicate(TaskDetails task, String matchText) {
+		return task.getTaskId().toLowerCase().contains(matchText) || task.getTaskName().toLowerCase().contains(matchText) 
+				|| task.getStatus().toString().toLowerCase().contains(matchText) || task.getSpendHours().contains(matchText)
+				|| task.getStartDate().format( DateTimeFormatter.ofPattern(DateConstants.DEFAULT_DATE_FORMAT.toString())).toLowerCase().contains(matchText); 
 	}
 }

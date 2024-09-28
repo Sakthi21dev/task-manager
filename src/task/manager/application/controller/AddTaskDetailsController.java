@@ -47,11 +47,18 @@ public class AddTaskDetailsController {
 	
 	@FXML
 	public void initialize() {
+		
 		String newTaskId = TaskRepository.getNewId();
-		taskId.setText(newTaskId);
+		closeOnsubmit = false;
+		
+		startDate.setConverter(DateUtils.getConverter());
+		endDate.setConverter(DateUtils.getConverter());
 		status.getItems().addAll(TaskStatus.values());
+		
+		taskId.setText(newTaskId);
 		status.setValue(TaskStatus.YET_TO_START);
 		startDate.setValue(LocalDate.now());
+
 		status.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			if (TaskStatus.COMPLETED.equals(newValue)) {
 				endDate.setValue(LocalDate.now());
@@ -59,21 +66,20 @@ public class AddTaskDetailsController {
 				endDate.setValue(null);
 			}
 		});
-		closeOnsubmit = false;
-//		endDate.setValue(LocalDate.now());
 	}
 
 	public void setTaskDetails(TaskDetails newTask) {
 		String taskDetailsId = newTask.getTaskId();
 		TaskDetails thatTask = taskRepository.getById(taskDetailsId);
+		closeOnsubmit = true;
+		
 		taskId.setText(taskDetailsId);
 		taskName.setText(thatTask.getTaskName());
-//		status.getItems().addAll(TaskStatus.values());
 		status.setValue(newTask.getStatus());
 		startDate.setValue(newTask.getStartDate());
 		spendHours.setText(newTask.getSpendHours());
 		endDate.setValue(newTask.getEndDate());
-		closeOnsubmit = true;
+		
 	}
 
 	@FXML
@@ -83,6 +89,7 @@ public class AddTaskDetailsController {
 
 			String taskId = this.taskId.getText();
 			TaskDetails thatTask = taskRepository.getById(taskId);
+			TaskStatus taskStatus = status.getValue();
 
 			if (thatTask != null) {
 				newTask = thatTask;
@@ -92,17 +99,19 @@ public class AddTaskDetailsController {
 
 			newTask.setTaskId(taskId);
 			newTask.setTaskName(taskName.getText());
-			TaskStatus taskStatus = status.getValue();
 			newTask.setStatus(taskStatus);
 			newTask.setStartDate(startDate.getValue());
+			newTask.setSpendHours(spendHours.getText());
+
 			if (TaskStatus.COMPLETED.equals(taskStatus)) {
 				newTask.setEndDate(endDate.getValue());
 			}
-			newTask.setSpendHours(spendHours.getText());
+
 			if(closeOnsubmit) {
 				Stage stage = (Stage)((Button) event.getSource()).getScene().getWindow();
 	            stage.close();
 			}
+			
 			handleCancel();
 		}
 
@@ -144,8 +153,6 @@ public class AddTaskDetailsController {
 	@FXML
 	public void handleCancel() {
 		taskName.clear();
-//		taskId.clear();
-//		taskId.setText(TaskRepository.getNewId());
 		status.setValue(TaskStatus.YET_TO_START);
 		startDate.setValue(LocalDate.now());
 		endDate.setValue(null);
