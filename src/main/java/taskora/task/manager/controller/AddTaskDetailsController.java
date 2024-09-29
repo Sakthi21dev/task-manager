@@ -22,6 +22,9 @@ public class AddTaskDetailsController {
   ObservableList<TaskDetails> task = taskRepository.getTasks();
 
   @FXML
+  TextField id;
+  
+  @FXML
   TextField taskId;
 
   @FXML
@@ -42,6 +45,54 @@ public class AddTaskDetailsController {
   TaskDetails newTask = new TaskDetails();
 
   boolean onEditMode;
+
+  @FXML
+  public void handleClear() {
+
+    if (!onEditMode) {
+      taskId.clear();
+    }
+    taskName.clear();
+    status.setValue(TaskStatus.YET_TO_START);
+    startDate.setValue(LocalDate.now());
+    endDate.setValue(null);
+    spendHours.clear();
+  }
+
+  @FXML
+  public void handleSubmit(ActionEvent event) {
+
+    if (validateMadantoryInputs()) {
+
+      String taskId = this.taskId.getText();
+//      TaskDetails thatTask = taskRepository.getById(taskId);
+//      if (thatTask != null) {
+//        newTask = thatTask;
+//      }
+
+      TaskStatus taskStatus = status.getValue();
+
+      newTask.setTaskId(taskId);
+      newTask.setTaskName(taskName.getText());
+      newTask.setStatus(taskStatus);
+      newTask.setStartDate(startDate.getValue());
+      newTask.setSpendHours(spendHours.getText());
+
+      if (TaskStatus.COMPLETED.equals(taskStatus)) {
+        newTask.setEndDate(endDate.getValue());
+      }
+
+      taskRepository.saveTask(newTask);
+
+      if (onEditMode) {
+        Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+        stage.close();
+      }
+
+      handleClear();
+    }
+
+  }
 
   @FXML
   public void initialize() {
@@ -72,52 +123,16 @@ public class AddTaskDetailsController {
   }
 
   public void setTaskDetails(TaskDetails newTask) {
-    String taskDetailsId = newTask.getTaskId();
-    TaskDetails thatTask = taskRepository.getById(taskDetailsId);
-    onEditMode = true;
-
-    taskId.setText(taskDetailsId);
-    taskId.setDisable(true);
-    taskName.setText(thatTask.getTaskName());
-    status.setValue(newTask.getStatus());
-    startDate.setValue(newTask.getStartDate());
-    spendHours.setText(newTask.getSpendHours());
-    endDate.setValue(newTask.getEndDate());
-
-  }
-
-  @FXML
-  public void handleSubmit(ActionEvent event) {
-
-    if (validateMadantoryInputs()) {
-
-      String taskId = this.taskId.getText();
-      TaskDetails thatTask = taskRepository.getById(taskId);
-      if (thatTask != null) {
-        newTask = thatTask;
-      }
-
-      TaskStatus taskStatus = status.getValue();
-
-      newTask.setTaskId(taskId);
-      newTask.setTaskName(taskName.getText());
-      newTask.setStatus(taskStatus);
-      newTask.setStartDate(startDate.getValue());
-      newTask.setSpendHours(spendHours.getText());
-
-      if (TaskStatus.COMPLETED.equals(taskStatus)) {
-        newTask.setEndDate(endDate.getValue());
-      }
-
-      taskRepository.saveTask(newTask);
-
-      if (onEditMode) {
-        Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-        stage.close();
-      }
-
-      handleClear();
-    }
+    String id = newTask.getId();
+    TaskDetails thatTask = taskRepository.getById(id);
+    this.onEditMode = true;
+    this.id.setText(id);
+    this.taskId.setText(thatTask.getTaskId());
+    this.taskName.setText(thatTask.getTaskName());
+    this.status.setValue(thatTask.getStatus());
+    this.startDate.setValue(thatTask.getStartDate());
+    this.spendHours.setText(thatTask.getSpendHours());
+    this.endDate.setValue(thatTask.getEndDate());
 
   }
 
@@ -129,18 +144,5 @@ public class AddTaskDetailsController {
     }
     return false;
 
-  }
-
-  @FXML
-  public void handleClear() {
-
-    if (!onEditMode) {
-      taskId.clear();
-    }
-    taskName.clear();
-    status.setValue(TaskStatus.YET_TO_START);
-    startDate.setValue(LocalDate.now());
-    endDate.setValue(null);
-    spendHours.clear();
   }
 }

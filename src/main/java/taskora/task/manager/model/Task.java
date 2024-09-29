@@ -43,9 +43,10 @@ public class Task {
   public Task() {
   }
 
-  public Task(String id, String taskId, String taskName, LocalDate assignedDate, LocalDate startDate,
-      LocalDate endDate, String estimatedHours, String spendHours, TaskStatus status) {
-   
+  public Task(String id, String taskId, String taskName, LocalDate assignedDate,
+      LocalDate startDate, LocalDate endDate, String estimatedHours, String spendHours,
+      TaskStatus status) {
+
     this.id = Long.parseLong(id);
     this.taskId = taskId;
     this.taskName = taskName;
@@ -56,15 +57,23 @@ public class Task {
   }
 
   public Task(TaskDetails newTaskDetail) {
-    
-    this.id = Long.parseLong(newTaskDetail.getId());
+
+    String taskId = newTaskDetail.getId();
+    if (taskId != null && !taskId.isEmpty()) {
+      this.id = Long.parseLong(taskId);
+    }
     setTaskId(newTaskDetail.getTaskId());
     setTaskName(newTaskDetail.getTaskName());
     setStartDate(newTaskDetail.getStartDate());
     setSpendHours(newTaskDetail.getSpendHours());
     setEndDate(newTaskDetail.getEndDate());
     setStatus(newTaskDetail.getStatus());
-    System.out.println(" Convertion of newTaskdetails ["+newTaskDetail+"] to task to add : "+ this);
+    System.out
+        .println(" Convertion of newTaskdetails [" + newTaskDetail + "] to task to add : " + this);
+  }
+
+  public LocalDate getEndDate() {
+    return endDate;
   }
 
   // Getters and Setters
@@ -72,56 +81,52 @@ public class Task {
     return id;
   }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
-
-  public String getTaskId() {
-    return taskId;
-  }
-
-  public void setTaskId(String taskId) {
-    this.taskId = taskId;
-  }
-
-  public String getTaskName() {
-    return taskName;
-  }
-
-  public void setTaskName(String taskName) {
-    this.taskName = taskName;
+  public String getSpendHours() {
+    return spendHours;
   }
 
   public LocalDate getStartDate() {
     return startDate;
   }
 
-  public void setStartDate(LocalDate startDate) {
-    this.startDate = startDate;
+  public TaskStatus getStatus() {
+    return status;
   }
 
-  public LocalDate getEndDate() {
-    return endDate;
+  public String getTaskId() {
+    return taskId;
+  }
+
+  public String getTaskName() {
+    return taskName;
   }
 
   public void setEndDate(LocalDate endDate) {
     this.endDate = endDate;
   }
 
-  public String getSpendHours() {
-    return spendHours;
+  public void setId(Long id) {
+    this.id = id;
   }
 
   public void setSpendHours(String spendHours) {
     this.spendHours = spendHours;
   }
 
-  public TaskStatus getStatus() {
-    return status;
+  public void setStartDate(LocalDate startDate) {
+    this.startDate = startDate;
   }
 
   public void setStatus(TaskStatus status) {
     this.status = status;
+  }
+
+  public void setTaskId(String taskId) {
+    this.taskId = taskId;
+  }
+
+  public void setTaskName(String taskName) {
+    this.taskName = taskName;
   }
 
   @Override

@@ -15,12 +15,30 @@ public class App extends Application {
 
   private static ConfigurableApplicationContext context;
 
-  private Stage primaryStage;
   private static BorderPane rootLayout;
+  public static ConfigurableApplicationContext getApplicationContext() {
+    return context;
+  }
+
+  public static void main(String[] args) {
+    launch(args);
+  }
+
+  public static void setRoot(String fxml) throws IOException {
+    rootLayout.setCenter(FxmlUtils.loadFXML(fxml));
+  }
+
+  private Stage primaryStage;
 
   @Override
   public void init() {
     context = SpringApplication.run(MainApp.class);
+  }
+
+  public void setHomeScene() throws IOException {
+
+    rootLayout.setCenter(FxmlUtils.loadFXML("TaskOfTheDayLayout"));
+
   }
 
   @Override
@@ -42,24 +60,6 @@ public class App extends Application {
   @Override
   public void stop() {
     context.close();
-  }
-
-  public void setHomeScene() throws IOException {
-
-    rootLayout.setCenter(FxmlUtils.loadFXML("TaskOfTheDayLayout"));
-
-  }
-
-  public static void setRoot(String fxml) throws IOException {
-    rootLayout.setCenter(FxmlUtils.loadFXML(fxml));
-  }
-
-  public static ConfigurableApplicationContext getApplicationContext() {
-    return context;
-  }
-  
-  public static void main(String[] args) {
-    launch(args);
   }
 
 }

@@ -18,12 +18,8 @@ public class DateUtils {
     return date.isEqual(today);
   }
 
-  public static boolean isValidDuration(String duration) {
-    // Regex pattern for "hour:min" format
-    String regex = "^(\\d+):(\\d{2})$";
-    Pattern pattern = Pattern.compile(regex);
-    Matcher matcher = pattern.matcher(duration);
-    return matcher.matches();
+  public static String format(LocalDate date) {
+    return formatter.format(date);
   }
 
   public static StringConverter<LocalDate> getConverter() {
@@ -32,19 +28,19 @@ public class DateUtils {
           .ofPattern(DateConstants.DEFAULT_DATE_FORMAT.toString());
 
       @Override
-      public String toString(LocalDate date) {
-        if (date != null) {
-          return dateFormatter.format(date);
-        }
-        return "";
-      }
-
-      @Override
       public LocalDate fromString(String string) {
         if (string != null && !string.isEmpty()) {
           return LocalDate.parse(string, dateFormatter);
         }
         return null;
+      }
+
+      @Override
+      public String toString(LocalDate date) {
+        if (date != null) {
+          return dateFormatter.format(date);
+        }
+        return "";
       }
     };
 
@@ -56,5 +52,13 @@ public class DateUtils {
 
   public static DateTimeFormatter getDefaultFormatter() {
     return formatter;
+  }
+
+  public static boolean isValidDuration(String duration) {
+    // Regex pattern for "hour:min" format
+    String regex = "^(\\d+):(\\d{2})$";
+    Pattern pattern = Pattern.compile(regex);
+    Matcher matcher = pattern.matcher(duration);
+    return matcher.matches();
   }
 }

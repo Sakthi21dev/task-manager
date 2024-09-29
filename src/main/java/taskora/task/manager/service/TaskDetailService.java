@@ -15,15 +15,7 @@ import taskora.task.manager.repository.TaskRepository;
 public class TaskDetailService {
 
   private static TaskDetailService taskRepo;
-  private TaskRepository taskRepository = App.getApplicationContext()
-      .getBean(TaskRepository.class);;
-
-  private static AtomicInteger id = new AtomicInteger();
-  private ObservableList<TaskDetails> taskDetails = FXCollections.observableArrayList();
-
-  private TaskDetailService() {
-    
-  }
+  private static AtomicInteger id = new AtomicInteger();;
 
   public static TaskDetailService getInstance() {
     if (taskRepo == null) {
@@ -31,27 +23,6 @@ public class TaskDetailService {
     }
     return taskRepo;
   }
-
-  public ObservableList<TaskDetails> getTasks() {
-
-    taskDetails.clear();
-    List<Task> tasks = taskRepository.findAll();
-    tasks.forEach(task -> {
-      taskDetails.add(new TaskDetails(task));
-    });
-
-    return taskDetails;
-  }
-
-  public TaskDetails getById(String id) {
-    return taskDetails.stream().filter(task -> task.getTaskId().equals(id)).findFirst()
-        .orElse(null);
-  }
-
-  public void setTasks(ObservableList<TaskDetails> tasks) {
-    this.taskDetails = tasks;
-  }
-
   public static String getNewId() {
     return String.valueOf(id.getAndIncrement());
   }
@@ -66,9 +37,44 @@ public class TaskDetailService {
             .toLowerCase().contains(matchText);
   }
 
+  private TaskRepository taskRepository = App.getApplicationContext()
+      .getBean(TaskRepository.class);
+
+  private ObservableList<TaskDetails> taskDetails = FXCollections.observableArrayList();
+
+  private TaskDetailService() {
+
+  }
+
+  public TaskDetails getById(String id) {
+    Task task = null;
+    if(id != null && !id.isEmpty()) {
+      task = taskRepository.findById(Long.parseLong(id)).orElse(null);
+      if(task != null) {
+        return new TaskDetails(task);
+      }
+    }
+    return null;
+  }
+
+  public ObservableList<TaskDetails> getTasks() {
+
+    taskDetails.clear();
+    List<Task> tasks = taskRepository.findAll();
+    tasks.forEach(task -> {
+      taskDetails.add(new TaskDetails(task));
+    });
+
+    return taskDetails;
+  }
+
   public Task saveTask(TaskDetails newTaskDetail) {
 
     return taskRepository.save(new Task(newTaskDetail));
 
+  }
+
+  public void setTasks(ObservableList<TaskDetails> tasks) {
+    this.taskDetails = tasks;
   }
 }

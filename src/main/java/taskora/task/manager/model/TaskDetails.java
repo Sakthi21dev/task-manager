@@ -26,7 +26,7 @@ public class TaskDetails {
 
   public TaskDetails(Task task) {
 
-    setId(String.valueOf(task.getId())  == null ? "" : String.valueOf(task.getId())  );
+    setId(String.valueOf(task.getId()));
     setTaskId(task.getTaskId());
     setTaskName(task.getTaskName());
     setStartDate(task.getStartDate());
@@ -36,56 +36,20 @@ public class TaskDetails {
 
   }
 
-  public StringProperty taskId() {
-    return taskId;
-  }
-
-  public String getTaskId() {
-    return taskId.get();
-  }
-
-  public void setTaskId(String taskId) {
-    this.taskId.set(taskId);
-  }
-
-  public StringProperty taskName() {
-    return taskName;
-  }
-
-  public String getTaskName() {
-    return taskName.get();
-  }
-
-  public void setTaskName(String taskName) {
-    this.taskName.set(taskName);
-  }
-
   public ObjectProperty<LocalDate> assignedDate() {
     return assignedDate;
   }
 
-  public LocalDate getAssignedDate() {
-    return assignedDate.get();
-  }
-
-  public void setAssignedDate(LocalDate assignedDate) {
-    this.assignedDate.set(assignedDate);
-  }
-
-  public ObjectProperty<LocalDate> startDate() {
-    return startDate;
-  }
-
-  public LocalDate getStartDate() {
-    return startDate.get();
-  }
-
-  public void setStartDate(LocalDate startDate) {
-    this.startDate.set(startDate);
-  }
-
   public ObjectProperty<LocalDate> endDate() {
     return endDate;
+  }
+
+  public StringProperty estimatedHours() {
+    return estimatedHours;
+  }
+
+  public LocalDate getAssignedDate() {
+    return assignedDate.get();
   }
 
   public LocalDate getEndDate() {
@@ -96,36 +60,40 @@ public class TaskDetails {
     this.endDate.set(endDate);
   }
 
-  public StringProperty estimatedHours() {
-    return estimatedHours;
-  }
-
   public String getEstimatedHours() {
     return estimatedHours.get();
   }
 
-  public ObjectProperty<TaskStatus> status() {
-    return status;
-  }
-
-  public StringProperty spendHours() {
-    return spendHours;
+  public String getId() {
+    return this.idProperty().get();
   }
 
   public String getSpendHours() {
     return spendHours.get();
   }
 
-  public void setSpendHours(String hours) {
-    spendHours.set(hours);
+  public LocalDate getStartDate() {
+    return startDate.get();
   }
 
   public TaskStatus getStatus() {
     return status.get();
   }
 
-  public void setStatus(TaskStatus taskDetails) {
-    status.set(taskDetails);
+  public String getTaskId() {
+    return taskId.get();
+  }
+
+  public String getTaskName() {
+    return taskName.get();
+  }
+
+  public StringProperty idProperty() {
+    return this.id;
+  }
+
+  public void setAssignedDate(LocalDate assignedDate) {
+    this.assignedDate.set(assignedDate);
   }
 
   public void setEndDate(LocalDate endDate) {
@@ -136,16 +104,48 @@ public class TaskDetails {
     this.estimatedHours.set(hours);
   }
 
-  public StringProperty idProperty() {
-    return this.id;
-  }
-
-  public String getId() {
-    return this.idProperty().get();
-  }
-
   public void setId(final String id) {
     this.idProperty().set(id);
+  }
+
+  public void setSpendHours(String hours) {
+    spendHours.set(hours);
+  }
+
+  public void setStartDate(LocalDate startDate) {
+    this.startDate.set(startDate);
+  }
+
+  public void setStatus(TaskStatus taskDetails) {
+    status.set(taskDetails);
+  }
+
+  public void setTaskId(String taskId) {
+    this.taskId.set(taskId);
+  }
+
+  public void setTaskName(String taskName) {
+    this.taskName.set(taskName);
+  }
+
+  public StringProperty spendHours() {
+    return spendHours;
+  }
+
+  public ObjectProperty<LocalDate> startDate() {
+    return startDate;
+  }
+
+  public ObjectProperty<TaskStatus> status() {
+    return status;
+  }
+
+  public StringProperty taskId() {
+    return taskId;
+  }
+
+  public StringProperty taskName() {
+    return taskName;
   }
 
   @Override
