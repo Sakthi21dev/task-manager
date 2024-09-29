@@ -11,30 +11,19 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane prefHeight="400.0" prefWidth="600.0"
-	xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="taskora.task.manager.controller.AddTaskDetailsController">
+<GridPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="taskora.task.manager.controller.AddTaskDetailsController">
 	<columnConstraints>
-		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"
-			prefWidth="100.0" />
-		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0"
-			prefWidth="100.0" />
+		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
 	</columnConstraints>
 	<rowConstraints>
-		<RowConstraints minHeight="10.0" prefHeight="30.0"
-			vgrow="SOMETIMES" />
-		<RowConstraints minHeight="10.0" prefHeight="30.0"
-			vgrow="SOMETIMES" />
-		<RowConstraints minHeight="10.0" prefHeight="30.0"
-			vgrow="SOMETIMES" />
-		<RowConstraints minHeight="10.0" prefHeight="30.0"
-			vgrow="SOMETIMES" />
-		<RowConstraints minHeight="10.0" prefHeight="30.0"
-			vgrow="SOMETIMES" />
-		<RowConstraints minHeight="10.0" prefHeight="30.0"
-			vgrow="SOMETIMES" />
-		<RowConstraints minHeight="10.0" prefHeight="30.0"
-			vgrow="SOMETIMES" />
+		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
 	</rowConstraints>
 	<children>
 		<Label text="Task Id" />
@@ -42,32 +31,22 @@
 		<Label text="Status" GridPane.rowIndex="2" />
 		<Label text="Start Date" GridPane.rowIndex="3" />
 		<Label text="End Date" GridPane.rowIndex="4" />
-		<Label layoutX="10.0" layoutY="17.0" text="Spend Hours"
-			GridPane.rowIndex="5" />
-		<TextField fx:id="taskId" disable="true" editable="false"
-			opacity="0.5" GridPane.columnIndex="1" />
-		<TextField fx:id="taskName" GridPane.columnIndex="1"
-			GridPane.rowIndex="1" />
-		<TextField fx:id="spendHours" GridPane.columnIndex="1"
-			GridPane.rowIndex="5" />
-		<ChoiceBox fx:id="status" prefWidth="150.0"
-			GridPane.columnIndex="1" GridPane.rowIndex="2" />
-		<ButtonBar buttonMinWidth="50.0" GridPane.columnIndex="1"
-			GridPane.rowIndex="6">
+		<Label layoutX="10.0" layoutY="17.0" text="Spend Hours" GridPane.rowIndex="5" />
+		<TextField fx:id="taskId" GridPane.columnIndex="1" />
+		<TextField fx:id="taskName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+		<TextField fx:id="spendHours" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+		<ChoiceBox fx:id="status" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+		<ButtonBar buttonMinWidth="50.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
 			<buttons>
-				<Button mnemonicParsing="false" onAction="#handleSubmit"
-					text="Ok" />
-				<Button layoutX="135.0" layoutY="18.0"
-					mnemonicParsing="false" onAction="#handleClear" text="Clear" />
+				<Button mnemonicParsing="false" onAction="#handleSubmit" text="Ok" />
+				<Button layoutX="135.0" layoutY="18.0" mnemonicParsing="false" onAction="#handleClear" text="Clear" />
 			</buttons>
 			<GridPane.margin>
 				<Insets right="5.0" />
 			</GridPane.margin>
 		</ButtonBar>
-		<DatePicker fx:id="startDate" GridPane.columnIndex="1"
-			GridPane.rowIndex="3" />
-		<DatePicker fx:id="endDate" disable="true" editable="false"
-			opacity="0.5" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+		<DatePicker fx:id="startDate" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+		<DatePicker fx:id="endDate" disable="true" editable="false" opacity="0.5" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 	</children>
 	<padding>
 		<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
