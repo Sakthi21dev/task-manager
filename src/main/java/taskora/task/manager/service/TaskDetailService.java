@@ -23,6 +23,7 @@ public class TaskDetailService {
     }
     return taskRepo;
   }
+
   public static String getNewId() {
     return String.valueOf(id.getAndIncrement());
   }
@@ -37,8 +38,7 @@ public class TaskDetailService {
             .toLowerCase().contains(matchText);
   }
 
-  private TaskRepository taskRepository = App.getApplicationContext()
-      .getBean(TaskRepository.class);
+  private TaskRepository taskRepository = App.getApplicationContext().getBean(TaskRepository.class);
 
   private ObservableList<TaskDetails> taskDetails = FXCollections.observableArrayList();
 
@@ -48,9 +48,9 @@ public class TaskDetailService {
 
   public TaskDetails getById(String id) {
     Task task = null;
-    if(id != null && !id.isEmpty()) {
+    if (id != null && !id.isEmpty()) {
       task = taskRepository.findById(Long.parseLong(id)).orElse(null);
-      if(task != null) {
+      if (task != null) {
         return new TaskDetails(task);
       }
     }
@@ -76,5 +76,12 @@ public class TaskDetailService {
 
   public void setTasks(ObservableList<TaskDetails> tasks) {
     this.taskDetails = tasks;
+  }
+
+  public void deleteTask(TaskDetails selectedTask) {
+
+    Task task = new Task(selectedTask);
+    taskRepository.delete(task);
+
   }
 }

@@ -36,6 +36,19 @@ public class ValidationService {
   }
 
   /**
+   * Validates the spend hours input. Checks if spend hours field is not empty and
+   * validate format.
+   * 
+   * @param spendHours The spend hours as a string.
+   * @return True if valid, otherwise false.
+   */
+  public static boolean validateSpendHours(String spendHours) {
+    return validateIsNotEmpty(spendHours, WarningMessage.EMPTY_SPEND_HOURS.toString())
+        && validateIsValidTimeFormat(spendHours,
+            WarningMessage.INVALID_SPEND_HOURS_FORMAT.toString());
+  }
+
+  /**
    * Validates the task status and the corresponding spend hours.
    *
    * @param status     The task status.
@@ -47,41 +60,14 @@ public class ValidationService {
   }
 
   /**
-   * Validates the spend hours input.
+   * Validates that the time follow the correct duration format.
    *
-   * @param spendHours The spend hours as a string.
-   * @return True if valid, otherwise false.
-   */
-  public static boolean validateSpendHours(String spendHours) {
-    if (spendHours == null) {
-      spendHours = "";
-    }
-    return validateSpendHoursIsNotEmpty(spendHours) && validateSpendHoursDuration(spendHours);
-  }
-
-  /**
-   * Validates that the spend hours follow the correct duration format.
-   *
-   * @param spendHours The spend hours as a string.
+   * @param time The hours as a string.
    * @return True if valid format, otherwise false.
    */
-  public static boolean validateSpendHoursDuration(String spendHours) {
-    if (!DateUtils.isValidDuration(spendHours)) {
-      showAlert(WarningMessage.INVALID_SPEND_HOURS_FORMAT.toString());
-      return false;
-    }
-    return true;
-  }
-
-  /**
-   * Checks if spend hours field is not empty.
-   *
-   * @param spendHours The spend hours as a string.
-   * @return True if not empty, otherwise false.
-   */
-  public static boolean validateSpendHoursIsNotEmpty(String spendHours) {
-    if (spendHours.trim().isEmpty()) {
-      showAlert(WarningMessage.EMPTY_SPEND_HOURS.toString());
+  public static boolean validateIsValidTimeFormat(String time, String message) {
+    if (!DateUtils.isValidDuration(time)) {
+      showAlert(message);
       return false;
     }
     return true;
@@ -94,8 +80,18 @@ public class ValidationService {
    * @return True if valid, otherwise false.
    */
   public static boolean validateTaskName(String taskName) {
-    if (taskName.trim().isEmpty()) {
-      showAlert(WarningMessage.EMPTY_TASK_NAME.toString());
+    return validateIsNotEmpty(taskName, WarningMessage.EMPTY_TASK_NAME.toString());
+  }
+
+  /**
+   * Validates that the value is not empty.
+   *
+   * @param taskName The task name as a string.
+   * @return True if valid, otherwise false.
+   */
+  public static boolean validateIsNotEmpty(String value, String Message) {
+    if (value == null || value.trim().isEmpty()) {
+      showAlert(Message);
       return false;
     }
     return true;
@@ -120,5 +116,14 @@ public class ValidationService {
   public static boolean validateStartDate(LocalDate startDate) {
     // Placeholder for start date validation logic
     return true; // Implement your validation logic here
+  }
+
+  public static boolean validateTaskId(String taskId) {
+    return validateIsNotEmpty(taskId, WarningMessage.EMPTY_TASK_ID.toString());
+  }
+
+  public static boolean validateIsValidTimeFormat(String newSpendHours) {
+    return validateIsValidTimeFormat(newSpendHours,
+        WarningMessage.INVALID_SPEND_HOURS_FORMAT.toString());
   }
 }

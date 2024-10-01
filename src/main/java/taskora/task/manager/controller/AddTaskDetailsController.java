@@ -127,6 +127,7 @@ public class AddTaskDetailsController {
     TaskDetails thatTask = taskRepository.getById(id);
     this.onEditMode = true;
     this.id.setText(id);
+    this.newTask.setId(id);
     this.taskId.setText(thatTask.getTaskId());
     this.taskName.setText(thatTask.getTaskName());
     this.status.setValue(thatTask.getStatus());

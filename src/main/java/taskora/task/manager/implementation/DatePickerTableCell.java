@@ -16,7 +16,7 @@ public class DatePickerTableCell extends TableCell<TaskDetails, LocalDate> {
     public DatePickerTableCell() {
         // Commit edit when a date is selected
         datePicker.setOnAction(e -> commitEdit(datePicker.getValue()));
-
+        datePicker.setConverter(DateUtils.getConverter());
         // Handle keyboard input for committing or canceling edit
         datePicker.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ESCAPE) {

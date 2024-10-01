@@ -9,6 +9,7 @@ package taskora.task.manager.constants;
 public enum WarningMessage {
 
   EMPTY_TASK_NAME("Task name should not be empty!"),
+  EMPTY_TASK_ID("Task id should not be empty!"),
   EMPTY_SPEND_HOURS("Spend hours should not be empty!"),
   INVALID_SPEND_HOURS_FORMAT("Invalid Spend hours format. Please use 'hour:min' format.");
 

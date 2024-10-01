@@ -17,7 +17,8 @@
 		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
 	</columnConstraints>
 	<rowConstraints>
-		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+		<RowConstraints fillHeight="false" maxHeight="-Infinity" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
 		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
 		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
 		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -26,17 +27,22 @@
 		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
 	</rowConstraints>
 	<children>
-		<Label text="Task Id" />
-		<Label text="Task  Name" GridPane.rowIndex="1" />
-		<Label text="Status" GridPane.rowIndex="2" />
-		<Label text="Start Date" GridPane.rowIndex="3" />
-		<Label text="End Date" GridPane.rowIndex="4" />
-		<Label layoutX="10.0" layoutY="17.0" text="Spend Hours" GridPane.rowIndex="5" />
-		<TextField fx:id="taskId" GridPane.columnIndex="1" />
-		<TextField fx:id="taskName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-		<TextField fx:id="spendHours" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-		<ChoiceBox fx:id="status" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-		<ButtonBar buttonMinWidth="50.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
+		<Label text="Id" visible="false" />
+		<TextField fx:id="id" disable="true" editable="false" visible="false" GridPane.columnIndex="1" />
+		<Label text="Task Id" GridPane.rowIndex="1" />
+		<TextField fx:id="taskId" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+		<Label text="Task  Name" GridPane.rowIndex="2" />
+		<TextField fx:id="taskName" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+		<Label text="Status" GridPane.rowIndex="3" />
+		<ChoiceBox fx:id="status" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+		<Label text="Start Date" GridPane.rowIndex="4" />
+		<DatePicker fx:id="startDate" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+		<Label text="End Date" GridPane.rowIndex="5" />
+		<DatePicker fx:id="endDate" disable="true" editable="false" opacity="0.5" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+		<Label text="Spend Hours" GridPane.rowIndex="6" />
+		<TextField fx:id="spendHours" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+		
+		<ButtonBar buttonMinWidth="50.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
 			<buttons>
 				<Button mnemonicParsing="false" onAction="#handleSubmit" text="Ok" />
 				<Button layoutX="135.0" layoutY="18.0" mnemonicParsing="false" onAction="#handleClear" text="Clear" />
@@ -45,8 +51,8 @@
 				<Insets right="5.0" />
 			</GridPane.margin>
 		</ButtonBar>
-		<DatePicker fx:id="startDate" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-		<DatePicker fx:id="endDate" disable="true" editable="false" opacity="0.5" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+		
+		
 	</children>
 	<padding>
 		<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

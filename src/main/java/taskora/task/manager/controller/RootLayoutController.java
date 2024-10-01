@@ -2,20 +2,27 @@ package taskora.task.manager.controller;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Optional;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.ChoiceBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
@@ -89,6 +96,7 @@ public class RootLayoutController {
     setupFilter();
     setupEditCommitHandlers();
 
+    taskTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     // Bind the filtered data to the table
     taskTableView.setItems(filteredData);
   }
@@ -98,23 +106,25 @@ public class RootLayoutController {
    */
   private void setupTableColumns() {
     id.setCellValueFactory(cellData -> cellData.getValue().idProperty());
+
     taskId.setCellValueFactory(cellData -> cellData.getValue().taskId());
-    
+    taskId.setCellFactory(TextFieldTableCell.forTableColumn());
+
     taskName.setCellValueFactory(cellData -> cellData.getValue().taskName());
     taskName.setCellFactory(TextFieldTableCell.forTableColumn()); // Enable editing for name column
-    
+
     status.setCellValueFactory(cellData -> cellData.getValue().status());
     status.setCellFactory(ChoiceBoxTableCell.forTableColumn(TaskStatus.values()));
-    
+
     startDate.setCellValueFactory(cellData -> cellData.getValue().startDate());
     startDate.setCellFactory(col -> new DatePickerTableCell());
-    
-    
+
     endDate.setCellValueFactory(cellData -> cellData.getValue().endDate());
     endDate.setCellFactory(
         (AbstractConvertCellFactory<TaskDetails, LocalDate>) value -> DateUtils.format(value));
-    
+
     spendHours.setCellValueFactory(cellData -> cellData.getValue().spendHours());
+    spendHours.setCellFactory(TextFieldTableCell.forTableColumn());
 
     filteredData = new FilteredList<>(taskDetailService.getTasks(), b -> true);
   }
@@ -128,18 +138,91 @@ public class RootLayoutController {
     MenuItem editMenuItem = new MenuItem("Edit Task");
     editMenuItem.setOnAction(event -> handleEditTask());
 
-    contextMenu.getItems().addAll(new MenuItem("Copy Task"), editMenuItem,
-        new MenuItem("Delete Task"));
+    MenuItem copyTask = new MenuItem("Copy Task");
+    copyTask.setOnAction(event -> handleCopyTask());
+
+    MenuItem deleteTask = new MenuItem("Delete Task");
+    deleteTask.setOnAction(event -> handleDeleteTask());
+
+    contextMenu.getItems().addAll(copyTask, editMenuItem, deleteTask);
 
     taskTableView.setRowFactory(rowValue -> {
       TableRow<TaskDetails> row = new TableRow<>();
       row.setOnMouseClicked(event -> {
         if (event.getButton().name().equals("SECONDARY")) {
+          if (taskTableView.getSelectionModel().getSelectedItems().size() > 1) {
+            editMenuItem.setDisable(true);
+          } else {
+            editMenuItem.setDisable(false);
+          }
           contextMenu.show(row, event.getScreenX(), event.getScreenY());
         }
       });
       return row;
     });
+  }
+
+  private void handleCopyTask() {
+    if (!taskTableView.getSelectionModel().isEmpty()) {
+      ObservableList<TaskDetails> selectedTasks = taskTableView.getSelectionModel()
+          .getSelectedItems();
+
+      StringBuilder taskData = new StringBuilder();
+      String tabDelimited = "\t";
+
+      selectedTasks.forEach(selectedTask -> {
+        for (TableColumn<TaskDetails, ?> column : taskTableView.getColumns()) {
+
+          if (column.isVisible()) {
+            Object value = column.getCellData(selectedTask);
+            taskData.append(value != null ? value.toString() : "").append(tabDelimited);
+          }
+
+        }
+        taskData.append("\n");
+      });
+
+      // Remove the last tab character for cleanliness
+      if (taskData.length() > 0) {
+        taskData.setLength(taskData.length() - 1);
+      }
+
+      // Copy to clipboard
+      Clipboard clipboard = Clipboard.getSystemClipboard();
+      ClipboardContent content = new ClipboardContent();
+      content.putString(taskData.toString());
+      clipboard.setContent(content);
+
+    }
+  }
+
+  private void handleDeleteTask() {
+    if (!taskTableView.getSelectionModel().isEmpty()) {
+      ObservableList<TaskDetails> selectedTasks = taskTableView.getSelectionModel()
+          .getSelectedItems();
+      ObservableList<TaskDetails> currentTasks = FXCollections
+          .observableArrayList(taskTableView.getItems());
+      
+      Optional<ButtonType> result = Optional.empty();
+      int selectedTasksCount = selectedTasks.size();
+      if(selectedTasksCount > 1) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete Confirmation");
+        alert.setHeaderText("Delete Selected Tasks");
+        alert.setContentText("Are you sure you want to delete all selected tasks?");
+        // Show the dialog and wait for user response
+        result = alert.showAndWait();  
+      }
+      
+      if((result.isPresent() && result.get() == ButtonType.OK) || selectedTasksCount == 1) {        
+        selectedTasks.forEach(selectedTask -> {
+          taskDetailService.deleteTask(selectedTask);
+        });
+        currentTasks.removeAll(selectedTasks);
+        taskTableView.setItems(currentTasks);
+      }
+
+    }
   }
 
   /**
@@ -176,6 +259,16 @@ public class RootLayoutController {
    * Sets up the handlers for edit commits on task name and status.
    */
   private void setupEditCommitHandlers() {
+
+    taskId.setOnEditCommit(event -> {
+      TaskDetails taskDetail = event.getRowValue();
+      String taskId = event.getNewValue();
+      if (ValidationService.validateTaskId(taskId)) {
+        taskDetail.setTaskId(taskId);
+        taskDetailService.saveTask(taskDetail); // Save changes
+      }
+    });
+
     taskName.setOnEditCommit(event -> {
       TaskDetails taskDetail = event.getRowValue();
       String newTaskName = event.getNewValue();
@@ -187,46 +280,51 @@ public class RootLayoutController {
 
     status.setOnEditCommit(event -> {
       TaskDetails taskDetail = event.getRowValue();
-      TaskStatus newValue = event.getNewValue(); 
-      if(TaskStatus.COMPLETED.equals(newValue) && ValidationService.validateSpendHours(this.spendHours.getText()) ) {
-        LocalDate newEndDate = LocalDate.now();
-        this.endDate.setText(DateUtils.format(newEndDate));
-        taskDetail.setEndDate(newEndDate);
+      TaskStatus newValue = event.getNewValue();
+      if (TaskStatus.COMPLETED.equals(newValue)) {
+        if (ValidationService.validateSpendHours(this.spendHours.getCellData(taskDetail))) {
+          LocalDate newEndDate = LocalDate.now();
+//          this.endDate.setText(DateUtils.format(newEndDate));
+          taskDetail.setEndDate(newEndDate);
+          taskDetail.setStatus(newValue);
+          taskDetailService.saveTask(taskDetail); // Save changes
+        }
+      } else {
         taskDetail.setStatus(newValue);
         taskDetailService.saveTask(taskDetail); // Save changes
       }
     });
-    
+
     spendHours.setOnEditCommit(event -> {
       TaskDetails taskDetail = event.getRowValue();
       String newSpendHours = event.getNewValue();
-      if(ValidationService.validateSpendHoursDuration(newSpendHours)) {
-        this.spendHours.setText(newSpendHours);
+      if (ValidationService.validateIsValidTimeFormat(newSpendHours)) {
+//        this.spendHours.setText(newSpendHours);
         taskDetail.setSpendHours(newSpendHours);
         taskDetailService.saveTask(taskDetail);
       }
     });
-    
+
     startDate.setOnEditCommit(event -> {
       TaskDetails taskDetail = event.getRowValue();
       LocalDate newStartDate = event.getNewValue();
       System.out.println(newStartDate);
-      if(ValidationService.validateStartDate(newStartDate)) {
-        this.startDate.setText(DateUtils.format(newStartDate));
+      if (ValidationService.validateStartDate(newStartDate)) {
+//        this.startDate.setText(DateUtils.format(newStartDate));
         taskDetail.setStartDate(newStartDate);
-        taskDetailService.saveTask(taskDetail); 
+        taskDetailService.saveTask(taskDetail);
       }
-      
+
     });
-    
- // Enable editing for the table and specific columns
+
+    // Enable editing for the table and specific columns
     taskTableView.setEditable(true);
+    taskId.setEditable(true);
     taskName.setEditable(true);
     status.setEditable(true);
     startDate.setEditable(true);
     spendHours.setEditable(true);
 
-    
   }
 
   /**
