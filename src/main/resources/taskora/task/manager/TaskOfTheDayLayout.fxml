@@ -1,18 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="taskora.task.manager.controller.RootLayoutController">
-	<children>
-		<TableView fx:id="taskTableView" editable="true" layoutX="10.0" layoutY="33.0" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="33.0">
+
+<VBox spacing="5.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="taskora.task.manager.controller.TaskOfTheDayController">
+   <children>
+		<HBox alignment="CENTER_LEFT" spacing="5.0">
+			<children>
+				<Label alignment="CENTER_RIGHT" text="Search" />
+				<TextField fx:id="searchBox" promptText="type here to find..." HBox.hgrow="ALWAYS" />
+            <Region HBox.hgrow="ALWAYS" />
+            <DatePicker fx:id="taskDisplayDate">
+               <HBox.margin>
+                  <Insets right="5.0" />
+               </HBox.margin>
+            </DatePicker>
+			</children>
+		</HBox>
+		<TableView fx:id="taskTableView" editable="true" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
 			<columns>
-				<TableColumn fx:id="id" prefWidth="75.0" text="Id" />
-				<TableColumn fx:id="taskId" prefWidth="75.0" text="Task Id" />
+				<TableColumn fx:id="id" prefWidth="75.0" text="Id" visible="false" />
+				<TableColumn fx:id="taskId" text="Task Id" />
 				<TableColumn fx:id="taskName" prefWidth="75.0" text="Task  Name" />
 				<TableColumn fx:id="status" prefWidth="75.0" text="Status" />
 				<TableColumn fx:id="startDate" prefWidth="75.0" text="Start Date" />
@@ -22,12 +38,12 @@
 			<columnResizePolicy>
 				<TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
 			</columnResizePolicy>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
 		</TableView>
-		<HBox alignment="CENTER_LEFT" layoutX="2.0" layoutY="2.0" prefHeight="25.0" prefWidth="411.0" spacing="5.0">
-			<children>
-				<Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="54.0" text="Search" />
-				<TextField fx:id="searchBox" prefHeight="25.0" prefWidth="342.0" promptText="type here to find..." />
-			</children>
-		</HBox>
-	</children>
-</AnchorPane>
+   </children>
+   <padding>
+      <Insets top="5.0" />
+   </padding>
+</VBox>

@@ -5,10 +5,14 @@ import java.time.LocalDate;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import taskora.task.manager.constants.TaskStatus;
 import taskora.task.manager.model.TaskDetails;
@@ -101,6 +105,15 @@ public class AddTaskDetailsController {
     onEditMode = false;
     taskId.setEditable(true);
 
+    Parent parent = taskId.getParent(); // Assuming taskId TextField is in the same Scene
+    parent.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+        if (event.isControlDown() && event.getCode() == KeyCode.S) {
+            event.consume(); // Prevent default save action
+            handleSubmit(new ActionEvent()); // Call handleSubmit
+        }
+    });
+
+    
     startDate.setConverter(DateUtils.getConverter());
     endDate.setConverter(DateUtils.getConverter());
     status.getItems().addAll(TaskStatus.values());

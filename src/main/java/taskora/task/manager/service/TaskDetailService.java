@@ -1,5 +1,6 @@
 package taskora.task.manager.service;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -83,5 +84,14 @@ public class TaskDetailService {
     Task task = new Task(selectedTask);
     taskRepository.delete(task);
 
+  }
+  
+  public ObservableList<TaskDetails> getTaskDetailsByStartDate(LocalDate date){
+    taskDetails.clear();
+    List<Task> tasks = taskRepository.findByStartDate(date);
+    tasks.forEach(task -> {
+      taskDetails.add(new TaskDetails(task));
+    });
+   return taskDetails;
   }
 }

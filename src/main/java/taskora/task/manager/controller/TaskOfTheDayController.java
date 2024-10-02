@@ -7,12 +7,15 @@ import java.util.Optional;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
@@ -23,6 +26,8 @@ import javafx.scene.control.cell.ChoiceBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
@@ -44,7 +49,7 @@ import taskora.task.manager.utils.FxmlUtils;
  * for tasks.
  * </p>
  */
-public class RootLayoutController {
+public class TaskOfTheDayController {
 
   @FXML
   private BorderPane rootPane;
@@ -81,6 +86,9 @@ public class RootLayoutController {
 
   @FXML
   private TextField searchBox;
+  
+  @FXML
+  private DatePicker taskDisplayDate;
 
   private TaskDetailService taskDetailService = TaskDetailService.getInstance();
   private FilteredList<TaskDetails> filteredData;
@@ -91,14 +99,42 @@ public class RootLayoutController {
    */
   @FXML
   public void initialize() {
+    
+    taskDisplayDate.setValue(LocalDate.now());
+    taskDisplayDate.setConverter(DateUtils.getConverter());
+    
+    Label placeholder = new Label("No tasks available.");
+    taskTableView.setPlaceholder(placeholder);
+    
     setupTableColumns();
     setupContextMenu();
+    setupKeyEvent();
     setupFilter();
     setupEditCommitHandlers();
 
     taskTableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     // Bind the filtered data to the table
     taskTableView.setItems(filteredData);
+  }
+
+  private void setupKeyEvent() {
+
+    taskTableView.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+      if (event.getCode() == KeyCode.DELETE && !taskTableView.getSelectionModel().isEmpty()) {
+        event.consume();
+        handleDeleteTask(event);
+      }
+    });
+
+    taskTableView.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+      if (event.isControlDown() && event.getCode() == KeyCode.C
+          && !taskTableView.getSelectionModel().isEmpty()) {
+        event.consume();
+        handleCopyTask();
+      }
+    });
+    
+    
   }
 
   /**
@@ -126,7 +162,7 @@ public class RootLayoutController {
     spendHours.setCellValueFactory(cellData -> cellData.getValue().spendHours());
     spendHours.setCellFactory(TextFieldTableCell.forTableColumn());
 
-    filteredData = new FilteredList<>(taskDetailService.getTasks(), b -> true);
+    filteredData = new FilteredList<>(taskDetailService.getTaskDetailsByStartDate(LocalDate.now()), b -> true);
   }
 
   /**
@@ -142,7 +178,7 @@ public class RootLayoutController {
     copyTask.setOnAction(event -> handleCopyTask());
 
     MenuItem deleteTask = new MenuItem("Delete Task");
-    deleteTask.setOnAction(event -> handleDeleteTask());
+    deleteTask.setOnAction(event -> handleDeleteTask(new Event(null)));
 
     contextMenu.getItems().addAll(copyTask, editMenuItem, deleteTask);
 
@@ -196,25 +232,25 @@ public class RootLayoutController {
     }
   }
 
-  private void handleDeleteTask() {
+  private void handleDeleteTask(Event event) {
     if (!taskTableView.getSelectionModel().isEmpty()) {
       ObservableList<TaskDetails> selectedTasks = taskTableView.getSelectionModel()
           .getSelectedItems();
       ObservableList<TaskDetails> currentTasks = FXCollections
           .observableArrayList(taskTableView.getItems());
-      
+
       Optional<ButtonType> result = Optional.empty();
       int selectedTasksCount = selectedTasks.size();
-      if(selectedTasksCount > 1) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Delete Confirmation");
-        alert.setHeaderText("Delete Selected Tasks");
-        alert.setContentText("Are you sure you want to delete all selected tasks?");
-        // Show the dialog and wait for user response
-        result = alert.showAndWait();  
+
+      if (selectedTasksCount > 1) {
+        result = deleteTaskWarningAlert("Are you sure you want to delete all selected tasks?");
       }
-      
-      if((result.isPresent() && result.get() == ButtonType.OK) || selectedTasksCount == 1) {        
+
+      if (selectedTasksCount == 1) {
+        result = deleteTaskWarningAlert("Are you sure you want to delete selected task?");
+      }
+
+      if ((result.isPresent() && result.get() == ButtonType.OK)) {
         selectedTasks.forEach(selectedTask -> {
           taskDetailService.deleteTask(selectedTask);
         });
@@ -223,6 +259,16 @@ public class RootLayoutController {
       }
 
     }
+  }
+
+  public Optional<ButtonType> deleteTaskWarningAlert(String message) {
+    Optional<ButtonType> result;
+    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+    alert.setTitle("Delete Confirmation");
+    alert.setHeaderText("Delete Selected Tasks");
+    alert.setContentText(message);
+    result = alert.showAndWait();
+    return result;
   }
 
   /**
@@ -252,6 +298,10 @@ public class RootLayoutController {
         String lowerCaseFilter = newValue.toLowerCase();
         return TaskDetailService.predicate(task, lowerCaseFilter);
       });
+    });
+    
+    taskDisplayDate.valueProperty().addListener((observable, oldvalue, newValue) ->{
+      filteredData = new FilteredList<>(taskDetailService.getTaskDetailsByStartDate(newValue), b-> true);
     });
   }
 
