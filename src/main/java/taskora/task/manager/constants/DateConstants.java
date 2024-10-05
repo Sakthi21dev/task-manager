@@ -2,7 +2,7 @@ package taskora.task.manager.constants;
 
 public enum DateConstants {
 
-  DEFAULT_DATE_FORMAT("dd-MM-yyyy");
+  DEFAULT_DATE_FORMAT("dd-MMM-yyyy");
 
   String value;
 
