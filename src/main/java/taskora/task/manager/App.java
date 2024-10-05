@@ -40,7 +40,7 @@ public class App extends Application {
   @Override
   public void init() {
     LoggingUtil.log(logger, LogLevel.INFO,  "Application is initializing...");
-    context = SpringApplication.run(MainApp.class);
+    context = SpringApplication.run(SpringBootApp.class);
   }
 
   public void setHomeScene() throws IOException {
