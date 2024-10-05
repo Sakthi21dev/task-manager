@@ -10,6 +10,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -358,7 +359,6 @@ public class TaskOfTheDayController {
     startDate.setOnEditCommit(event -> {
       TaskDetails taskDetail = event.getRowValue();
       LocalDate newStartDate = event.getNewValue();
-      System.out.println(newStartDate);
       if (ValidationService.validateStartDate(newStartDate)) {
 //        this.startDate.setText(DateUtils.format(newStartDate));
         taskDetail.setStartDate(newStartDate);
@@ -395,7 +395,7 @@ public class TaskOfTheDayController {
     dialogStage.initOwner(getRootWindow());
 
     // Load the dialog layout and controller
-    GridPane taskDetailsLayout = loader.load();
+    Parent taskDetailsLayout = loader.load();
     AddTaskDetailsController controller = loader.getController();
     controller.setTaskDetails(taskDetails); // Pass the task details to the controller
 

@@ -2,6 +2,7 @@ package taskora.task.manager.controller;
 
 import java.time.LocalDate;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,7 +13,6 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import taskora.task.manager.constants.TaskStatus;
 import taskora.task.manager.model.TaskDetails;
@@ -23,7 +23,7 @@ import taskora.task.manager.utils.DateUtils;
 public class AddTaskDetailsController {
 
   TaskDetailService taskRepository = TaskDetailService.getInstance();
-  ObservableList<TaskDetails> task = taskRepository.getTasks();
+  ObservableList<TaskDetails> task = FXCollections.emptyObservableList();
 
   @FXML
   TextField id;

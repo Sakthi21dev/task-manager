@@ -9,7 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import taskora.task.manager.App;
 import taskora.task.manager.constants.DateConstants;
-import taskora.task.manager.model.Task;
+import taskora.task.manager.entity.Task;
 import taskora.task.manager.model.TaskDetails;
 import taskora.task.manager.repository.TaskRepository;
 

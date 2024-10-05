@@ -1,4 +1,4 @@
-package taskora.task.manager.model;
+package taskora.task.manager.entity;
 
 import java.time.LocalDate;
 
@@ -11,6 +11,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import taskora.task.manager.constants.TaskStatus;
+import taskora.task.manager.model.TaskDetails;
+import taskora.task.manager.utils.LoggingUtil;
 
 @Entity
 @Table(name = "tasks")
@@ -68,8 +70,7 @@ public class Task {
     setSpendHours(newTaskDetail.getSpendHours());
     setEndDate(newTaskDetail.getEndDate());
     setStatus(newTaskDetail.getStatus());
-    System.out
-        .println(" Convertion of newTaskdetails [" + newTaskDetail + "] to task to add : " + this);
+
   }
 
   public LocalDate getEndDate() {
